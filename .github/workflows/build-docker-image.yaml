@@ -15,9 +15,8 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v2
       with:
-          with:
-            context: .
-            push: true
-            tags: image-front-interface:latest
-            username: ${{ secrets.DOCKER_HUB_USERNAME }}
-            password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          context: .
+          push: true
+          tags: image-front-interface:latest
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
