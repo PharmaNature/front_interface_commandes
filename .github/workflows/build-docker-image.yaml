@@ -1,32 +1,18 @@
-name: Build Docker Image
+name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
+
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Echo Checkout code
-      run: echo "Code checkout done"
-
-    - name: Build Docker image
-      id: build_image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: true
-        tags: image-front-interface:latest
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      env:
-        DOCKER_BUILDKIT: 1
-        DOCKER_CLI_EXPERIMENTAL: enabled
-      
-    - name: Echo Build code
-      run: echo "Code Build done"
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
