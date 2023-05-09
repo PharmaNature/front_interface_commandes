@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: Test git action 
       run: echo "Je ne fais rien je suis seulement un test pour git action."
-      - name: Test git action 2 
+    - name: Test git action 2 
       run: echo "rien juste test."
-      - name: Test git action 3
+    - name: Test git action 3
       run: echo "Toujours rien."
       

@@ -28,5 +28,5 @@ jobs:
         DOCKER_BUILDKIT: 1
         DOCKER_CLI_EXPERIMENTAL: enabled
       
-      - name: Echo Build code
+    - name: Echo Build code
         run: echo "Code Build done"
