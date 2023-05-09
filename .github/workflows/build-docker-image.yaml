@@ -22,13 +22,3 @@ jobs:
       # et avec le nom de l'image "my-image-name" et une balise basée sur la date et l'heure actuelles
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-
-      # Vérifie si l'image Docker a été construite avec succès
-      - name: Check the Docker image
-        run: |
-          if docker images 'my-image-name:'$(date +%s) | grep 'my-image-name'; then
-              echo "Docker image built successfully"
-          else
-              echo "Failed to build Docker image"
-              exit 1
-          fi
