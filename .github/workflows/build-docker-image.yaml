@@ -26,7 +26,7 @@ jobs:
       # Vérifie si l'image Docker a été construite avec succès
       - name: Check the Docker image
         run: |
-          if docker images my-image-name:$(date +%s) | grep my-image-name; then
+          if docker images 'my-image-name:'$(date +%s) | grep 'my-image-name'; then
               echo "Docker image built successfully"
           else
               echo "Failed to build Docker image"
