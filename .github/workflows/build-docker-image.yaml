@@ -1,19 +1,34 @@
 name: Docker Image CI
 
+# Définit les événements de déclenchement pour l'action GitHub
 on: 
   push: 
     branches: 
-    - main 
+      - main 
   pull_request: 
     branches: 
-    - main
+      - main
+
 jobs:
-
   build:
-
+    # Utilise une machine Ubuntu pour exécuter l'action
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # Récupère le code source de votre application
+      - uses: actions/checkout@v3
+
+      # Construit l'image Docker en utilisant le Dockerfile dans le répertoire courant
+      # et avec le nom de l'image "my-image-name" et une balise basée sur la date et l'heure actuelles
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+      # Vérifie si l'image Docker a été construite avec succès
+      - name: Check the Docker image
+        run: |
+          if docker images my-image-name:$(date +%s) | grep my-image-name; then
+              echo "Docker image built successfully"
+          else
+              echo "Failed to build Docker image"
+              exit 1
+          fi

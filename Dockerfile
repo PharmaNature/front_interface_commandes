@@ -1,11 +1,9 @@
-# Utiliser une image légère Nginx
-FROM nginx:1.21-alpine
+FROM node:17-alpine
 
-# Copier les fichiers d'application vers le répertoire de base Nginx
-COPY . .
+WORKDIR /app
+COPY ./ ./
+RUN npm install && chown -R node /app
 
-# Exposer le port sur lequel l'application écoute
-EXPOSE 80
+USER node 
 
-# Démarrer Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
