@@ -1,57 +1,51 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
+# Définit les événements qui déclenchent l'exécution de cette configuration d'actions.
+# Cette configuration est déclenchée par une planification, une poussée sur la branche principale ou une demande de tirage sur la branche principale.
 on:
-  schedule:
-    - cron: '36 14 * * *'
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
+# Définit les variables d'environnement utilisées dans cette configuration.
+# `REGISTRY` définit l'URL du registre Docker utilisé pour stocker l'image.
+# `IMAGE_NAME` définit le nom de l'image.
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-
+# Définit un travail `build` qui s'exécute sur la dernière version d'Ubuntu.
+# Les permissions sont configurées pour être en mesure de lire le contenu et d'écrire des packages.
+# `id-token` est utilisé pour résoudre les problèmes d'authentification lors de l'exécution en dehors des demandes de tirage.
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
       id-token: write
 
+    # Les étapes qui seront exécutées pour le travail `build`.
     steps:
+      # Vérifie le code source dans le référentiel GitHub.
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
+      # Installe l'outil cosign pour signer l'image Docker.
+      # Cette action n'est pas exécutée lors d'une demande de tirage.
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@f3c664df7af409cb4873aa5068053ba9d61a57b6 #v2.6.0
         with:
           cosign-release: 'v1.13.1'
 
-
-      # Workaround: https://github.com/docker/build-push-action/issues/461
+      # Configure Docker pour utiliser la version la plus récente de Buildx.
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
+      # Connecte Docker au registre de conteneurs pour stocker l'image.
+      # Cette action n'est pas exécutée lors d'une demande de tirage.
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
@@ -60,16 +54,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
+      # Extrait les métadonnées Docker de l'image et les stocke dans une variable appelée `meta`.
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
+      # Construit et pousse l'image Docker vers le registre de conteneurs.
+      # Les balises et les étiquettes sont extraites de la variable `meta`.
+      # Le cache Docker est également configuré pour utiliser la stratégie `max`.
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
@@ -81,16 +75,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
+      # Signe l'image Docker en utilisant l'outil cosign.
+      # Cette action n'est pas exécutée lors d'une demande de tirage.
+      # La balise et le hachage de l'image sont extraits de la variable `meta`.
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: "true"
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
         run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
