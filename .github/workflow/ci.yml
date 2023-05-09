@@ -1,0 +1,16 @@
+name: Integration Continue
+
+on: 
+  push: 
+    branches: 
+    - main 
+  pull_request: 
+    branches: 
+    - main
+    
+jobs:
+  buil:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test git action 
+      run: echo "Je ne fais rien je suis seulement un test."
