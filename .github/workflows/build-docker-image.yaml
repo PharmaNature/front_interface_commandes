@@ -11,6 +11,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    steps:
+    - name: Echo Checkout code
       run: echo "Code checkout done"
 
     - name: Build Docker image
@@ -25,4 +28,7 @@ jobs:
       env:
         DOCKER_BUILDKIT: 1
         DOCKER_CLI_EXPERIMENTAL: enabled
-      run: echo "Docker build and push done"
+      
+      steps:
+    - name: Echo Checkout code
+      run: echo "Code Build checkout code done"
