@@ -1,4 +1,3 @@
-# Nom de la configuration d'actions.
 name: Docker
 
 # Définit les événements qui déclenchent l'exécution de cette configuration d'actions.
@@ -81,4 +80,6 @@ jobs:
       # La balise et le hachage de l'image sont extraits de la variable `meta`.
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
-        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --key cosign.key {}@${{ steps.meta.outputs.digest }}
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
