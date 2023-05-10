@@ -76,11 +76,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Signe l'image Docker en utilisant l'outil cosign avec le type de support de signature "application/vnd.docker.distribution.manifest.v2+json".
+      # Signe l'image Docker en utilisant l'outil cosign.
       # Cette action n'est pas exécutée lors d'une demande de tirage.
       # La balise et le hachage de l'image sont extraits de la variable `meta`.
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign -key cosign.key --signature-media-type="application/vnd.docker.distribution.manifest.v2+json" {}@${{ steps.build-and-push.outputs.digest }}
+        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --key cosign.key {}@${{ steps.meta.outputs.digest }}
