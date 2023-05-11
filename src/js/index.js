@@ -345,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
         }
-        //faire la requete avec cette valeur
         let ref = e.target.parentNode.children[4].textContent
     }
 
@@ -372,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('http://localhost:8080/commandes/getByEtat/' + initial())
         .then(async res => {
           const data = await res.json();
-          console.log(data)
           for (let i = 0; i < data.length; i++) {
             let item = data[i];
             const conteneurStateOrder = document.createElement('div');
