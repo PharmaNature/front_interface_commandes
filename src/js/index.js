@@ -330,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleDoubleClick(e){
-        console.log(e.target.parentNode.children[4].textContent)
         const overlayDiv = document.createElement("div");
         overlayDiv.id = "overlay";
         document.body.appendChild(overlayDiv);
@@ -346,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
         }
+        let ref = e.target.parentNode.children[4].textContent
     }
 
     async function colorForState(state){
