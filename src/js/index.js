@@ -587,12 +587,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 
 
                 
-                // Détail de la commande (fichier pdf)
+                // Etiquette de livraison (fichier pdf)
                 const detailcommandeLabel = document.createElement("label");
-                detailcommandeLabel.textContent = "Détail de la commande:";
+                detailcommandeLabel.textContent = "Etiquette de livraison:";
                 const lienDetailCommande = document.createElement("a");
-                lienDetailCommande.textContent = "Cliquez ici pour voir le détail de la commande";
-                lienDetailCommande.href = "../../tools/pdf/facture.pdf";
+                lienDetailCommande.textContent = "Cliquez ici pour voir l'étiquette de livraison";
+                lienDetailCommande.addEventListener("click", function() {
+                    // getDeliveryLabel(data[0][0])
+                    getDeliveryLabel("ref001")
+                });
                 lienDetailCommande.target = "_blank"
                 lienDetailCommande.style.color = "blue";
                 lienDetailCommande.style.textDecoration = "underline";
@@ -602,6 +605,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 divDetailCommande.appendChild(lienDetailCommande);
 
                 popUp.appendChild(divDetailCommande)
+
+                // Facture de la commande (fichier pdf)
+                const invoiceCommandeLabel = document.createElement("label");
+                invoiceCommandeLabel.textContent = "Facture de la commande:";
+                const invoiceCommande = document.createElement("a");
+                invoiceCommande.textContent = "Cliquez ici pour voir la facture de la commande";
+                invoiceCommande.addEventListener("click", function() {
+                    // getInvoice(data[0][0])
+                    getInvoice("ref001")
+                });
+                invoiceCommande.target = "_blank"
+                invoiceCommande.style.color = "blue";
+                invoiceCommande.style.textDecoration = "underline";
+
+                const divInvoiceCommande = document.createElement("div");
+                divInvoiceCommande.appendChild(invoiceCommandeLabel);
+                divInvoiceCommande.appendChild(invoiceCommande);
+
+                popUp.appendChild(divInvoiceCommande)
 
                 // création du bouton Enregistrer
                 const enregistrerButton = document.createElement("button");
@@ -636,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateOrder(data) {
         console.log(data);
         const updatedOrder = {
-            data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10].substring(0,10),data[11].substring(0,10),data[12],data[13],data[14],data[15],data[16]]
+            data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15],data[16]]
         };
         try {
             const response = await fetch("http://localhost:8080/commandes/updateOrder", {
@@ -648,6 +670,47 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json();
             console.log(`Comment updated for order`);
+        } catch (error) {
+            console.error(`Error updating comment for order ${error}`);
+        }
+    }
+
+    async function getDeliveryLabel(ref) {
+        console.log("getDeliveryLabel "+ ref)
+        try {
+            const response = await fetch("http://localhost:8080/s3/downloadFile/delivery_label/"+ref, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if(response.ok){
+                const data = await response.blob();
+                const url = URL.createObjectURL(data)
+
+                window.open(url)
+            }
+            console.log(`Get delivery label from order`);
+        } catch (error) {
+            console.error(`Error updating comment for order ${error}`);
+        }
+    }
+    async function getInvoice(ref) {
+        console.log("getDeliveryLabel "+ ref)
+        try {
+            const response = await fetch("http://localhost:8080/s3/downloadFile/invoice/"+ref, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if(response.ok){
+                const data = await response.blob();
+                const url = URL.createObjectURL(data)
+
+                window.open(url)
+            }
+            console.log(`Get delivery label from order`);
         } catch (error) {
             console.error(`Error updating comment for order ${error}`);
         }

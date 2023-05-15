@@ -457,9 +457,3 @@ tbody tr:hover {
     background-color: #005cbf;
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
 }
-
-/* Style pour le bouton désactivé */
-#centered button[type="submit"]:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
