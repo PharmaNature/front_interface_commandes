@@ -374,15 +374,106 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(data);
 
                 // création des éléments du pop up 
+                // reference
+                const refCommandeLabel = document.createElement("label");
+                refCommandeLabel.textContent = "Référence de commande:";
+                const refCommandeInput = document.createElement("input");
+                refCommandeInput.type = "text";
+                refCommandeInput.setAttribute("readonly", "");
+                refCommandeInput.value = data[0][0];
+
+                const divRefCommande = document.createElement("div");
+                divRefCommande.appendChild(refCommandeLabel);
+                divRefCommande.appendChild(refCommandeInput);
+                popUp.appendChild(divRefCommande);
+
+
+                // invoice_number
                 const numFactureLabel = document.createElement("label");
                 numFactureLabel.textContent = "Numéro de facture:";
                 const numFactureInput = document.createElement("input");
                 numFactureInput.type = "text";
+                numFactureInput.setAttribute("readonly", "");
+                numFactureInput.value = data[0][1]
 
                 const divNumFacture = document.createElement("div");
                 divNumFacture.appendChild(numFactureLabel);
                 divNumFacture.appendChild(numFactureInput);
+                popUp.appendChild(divNumFacture);
 
+
+                // state_order
+                const stateOrderLabel = document.createElement("label");
+                stateOrderLabel.textContent = "État de la commande:";
+                const stateOrderInput = document.createElement("input");
+                stateOrderInput.type = "text";
+                stateOrderInput.value = data[0][2];
+
+                const divStateOrder = document.createElement("div");
+                divStateOrder.appendChild(stateOrderLabel);
+                divStateOrder.appendChild(stateOrderInput);
+                popUp.appendChild(divStateOrder);
+
+
+                // customer_message 
+                const customerMessageLabel = document.createElement("label");
+                customerMessageLabel.textContent = "Message du client:";
+                const customerMessageInput = document.createElement("input");
+                customerMessageInput.type = "text";
+                customerMessageInput.value = data[0][3];
+                
+                const divCustomerMessage = document.createElement("div");
+                divCustomerMessage.appendChild(customerMessageLabel);
+                divCustomerMessage.appendChild(customerMessageInput);
+                popUp.appendChild(divCustomerMessage);
+
+                // invoice_key 
+                const invoiceKeyLabel = document.createElement("label");
+                invoiceKeyLabel.textContent = "Clé de facture:";
+                const invoiceKeyInput = document.createElement("input");
+                invoiceKeyInput.type = "text";
+                invoiceKeyInput.setAttribute("readonly", "");
+                invoiceKeyInput.value = data[0][4];
+
+                const divInvoiceKey = document.createElement("div");
+                divInvoiceKey.appendChild(invoiceKeyLabel);
+                divInvoiceKey.appendChild(invoiceKeyInput);
+                popUp.appendChild(divInvoiceKey);
+
+                // amount_ttc 
+                const amountTTCLabel = document.createElement("label");
+                amountTTCLabel.textContent = "Montant TTC:";
+                const amountTTCInput = document.createElement("input");
+                amountTTCInput.type = "text";
+                amountTTCInput.value = data[0][5];
+
+                const divAmountTTC = document.createElement("div");
+                divAmountTTC.appendChild(amountTTCLabel);
+                divAmountTTC.appendChild(amountTTCInput);
+                popUp.appendChild(divAmountTTC);
+                // amount_ht 
+                const amountHTLabel = document.createElement("label");
+                amountHTLabel.textContent = "Montant HT:";
+                const amountHTInput = document.createElement("input");
+                amountHTInput.type = "text";
+                amountHTInput.value = data[0][6];
+
+                const divAmountHT = document.createElement("div");
+                divAmountHT.appendChild(amountHTLabel);
+                divAmountHT.appendChild(amountHTInput);
+                popUp.appendChild(divAmountHT);
+                // firstname 
+                const firstNameLabel = document.createElement("label");
+                firstNameLabel.textContent = "Prénom:";
+                const firstNameInput = document.createElement("input");
+                firstNameInput.type = "text";
+                firstNameInput.value = data[0][7];
+                
+                const divFirstName = document.createElement("div");
+                divFirstName.appendChild(firstNameLabel);
+                divFirstName.appendChild(firstNameInput);
+                popUp.appendChild(divFirstName);
+                // forename  
                 const nomClientLabel = document.createElement("label");
                 nomClientLabel.textContent = "Nom du client:";
                 const nomClientInput = document.createElement("input");
@@ -392,18 +483,97 @@ document.addEventListener('DOMContentLoaded', () => {
                 const divNomClient = document.createElement("div");
                 divNomClient.appendChild(nomClientLabel);
                 divNomClient.appendChild(nomClientInput);
+                popUp.appendChild(divNomClient);
 
-                const refCommandeLabel = document.createElement("label");
-                refCommandeLabel.textContent = "Référence de commande:";
-                const refCommandeInput = document.createElement("input");
-                refCommandeInput.type = "text";
-                refCommandeInput.value = data[0][1];
+                // phone_number
+                const phoneNumberLabel = document.createElement("label");
+                phoneNumberLabel.textContent = "Numéro de téléphone:";
+                const phoneNumberInput = document.createElement("input");
+                phoneNumberInput.type = "text";
+                phoneNumberInput.value = data[0][9];
 
+                const divPhoneNumber = document.createElement("div");
+                divPhoneNumber.appendChild(phoneNumberLabel);
+                divPhoneNumber.appendChild(phoneNumberInput);
+                popUp.appendChild(divPhoneNumber);
 
-                const divRefCommande = document.createElement("div");
-                divRefCommande.appendChild(refCommandeLabel);
-                divRefCommande.appendChild(refCommandeInput);
+                // creation_date
+                const creationDateLabel = document.createElement("label");
+                creationDateLabel.textContent = "Date de création:";
+                const creationDateInput = document.createElement("input");
+                creationDateInput.type = "text";
+                creationDateInput.setAttribute("readonly", "");
+                creationDateInput.value = new Date(data[0][10]).toISOString().substring(0, 10);
 
+                const divCreationDate = document.createElement("div");
+                divCreationDate.appendChild(creationDateLabel);
+                divCreationDate.appendChild(creationDateInput);
+                popUp.appendChild(divCreationDate);
+
+                // date_last_changed
+                const dateLastChangedLabel = document.createElement("label");
+                dateLastChangedLabel.textContent = "Date de dernière modification:";
+                const dateLastChangedInput = document.createElement("input");
+                dateLastChangedInput.type = "text";
+                dateLastChangedInput.setAttribute("readonly", "");
+                dateLastChangedInput.value = new Date(data[0][11]).toISOString().substring(0, 10);
+
+                const divDateLastChanged = document.createElement("div");
+                divDateLastChanged.appendChild(dateLastChangedLabel);
+                divDateLastChanged.appendChild(dateLastChangedInput);
+                popUp.appendChild(divDateLastChanged);
+
+                // payment_mode
+                const paymentModeLabel = document.createElement("label");
+                paymentModeLabel.textContent = "Mode de paiement:";
+                const paymentModeInput = document.createElement("input");
+                paymentModeInput.type = "text";
+                paymentModeInput.setAttribute("readonly", "");
+                paymentModeInput.value = data[0][12];
+
+                const divPaymentMode = document.createElement("div");
+                divPaymentMode.appendChild(paymentModeLabel);
+                divPaymentMode.appendChild(paymentModeInput);
+                popUp.appendChild(divPaymentMode);
+
+                // delivery_label
+                const deliveryLabelLabel = document.createElement("label");
+                deliveryLabelLabel.textContent = "Mode de livraison:";
+                const deliveryLabelInput = document.createElement("input");
+                deliveryLabelInput.type = "text";
+                deliveryLabelInput.value = data[0][13];
+
+                const divDeliveryLabel = document.createElement("div");
+                divDeliveryLabel.appendChild(deliveryLabelLabel);
+                divDeliveryLabel.appendChild(deliveryLabelInput);
+                popUp.appendChild(divDeliveryLabel);
+
+                // user_id
+                const userIdLabel = document.createElement("label");
+                userIdLabel.textContent = "Identifiant utilisateur:";
+                const userIdInput = document.createElement("input");
+                userIdInput.type = "text";
+                userIdInput.setAttribute("readonly", "");
+                userIdInput.value = data[0][14];
+
+                const divUserId = document.createElement("div");
+                divUserId.appendChild(userIdLabel);
+                divUserId.appendChild(userIdInput);
+                popUp.appendChild(divUserId);
+
+                // web_site
+                const webSiteLabel = document.createElement("label");
+                webSiteLabel.textContent = "Site web:";
+                const webSiteInput = document.createElement("input");
+                webSiteInput.type = "text";
+                webSiteInput.value = data[0][15];
+
+                const divWebSite = document.createElement("div");
+                divWebSite.appendChild(webSiteLabel);
+                divWebSite.appendChild(webSiteInput);
+                popUp.appendChild(divWebSite);
+
+                // comment
                 const commentaireLabel = document.createElement("label");
                 commentaireLabel.textContent = "Commentaire:";
                 const commentaireInput = document.createElement("input");
@@ -413,7 +583,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const divCommentaire = document.createElement("div");
                 divCommentaire.appendChild(commentaireLabel);
                 divCommentaire.appendChild(commentaireInput);
+                popUp.appendChild(divCommentaire);
+                
 
+                
+                // Détail de la commande (fichier pdf)
                 const detailcommandeLabel = document.createElement("label");
                 detailcommandeLabel.textContent = "Détail de la commande:";
                 const lienDetailCommande = document.createElement("a");
@@ -423,25 +597,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 lienDetailCommande.style.color = "blue";
                 lienDetailCommande.style.textDecoration = "underline";
 
-                // création du bouton Enregistrer
-                const enregistrerButton = document.createElement("button");
-                enregistrerButton.textContent = "Enregistrer";
-                enregistrerButton.addEventListener("click", () => {
-                    const newComment = commentaireInput.value;
-                    updateOrderCommentForReference(data[0][0], newComment);
-                });
-                const divEnregistrer = document.createElement("div");
-                divEnregistrer.appendChild(enregistrerButton);
-
                 const divDetailCommande = document.createElement("div");
                 divDetailCommande.appendChild(detailcommandeLabel);
                 divDetailCommande.appendChild(lienDetailCommande);
 
-                popUp.appendChild(divNumFacture);
-                popUp.appendChild(divNomClient);
-                popUp.appendChild(divRefCommande);
-                popUp.appendChild(divCommentaire);
-                popUp.appendChild(divDetailCommande);
+                popUp.appendChild(divDetailCommande)
+
+                // création du bouton Enregistrer
+                const enregistrerButton = document.createElement("button");
+                enregistrerButton.type = "submit"
+                enregistrerButton.textContent = "Enregistrer";
+                enregistrerButton.addEventListener("click", () => {
+                    
+                    data[0][2] = stateOrderInput.value
+                    data[0][3] = customerMessageInput.value
+                    data[0][5] = amountTTCInput.value
+                    data[0][6] = amountHTInput.value
+                    data[0][7] = firstNameInput.value
+                    data[0][8] = nomClientInput.value
+                    data[0][9] = phoneNumberInput.value
+                    data[0][13] = deliveryLabelInput.value
+                    data[0][15] = webSiteInput.value
+                    data[0][16] = commentaireInput.value
+
+                    console.log(data[0])
+                    updateOrder(data[0]);
+                });
+                const divEnregistrer = document.createElement("div");
+                divEnregistrer.appendChild(enregistrerButton);
                 popUp.appendChild(divEnregistrer)
             })
             .catch(error => {
@@ -450,25 +633,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    async function updateOrderCommentForReference(reference, newComment) {
-        console.log("zazaz");
-        console.log(newComment);
+    async function updateOrder(data) {
+        console.log(data);
         const updatedOrder = {
-        ref: reference,
-        newComment: newComment,
+            data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10].substring(0,10),data[11].substring(0,10),data[12],data[13],data[14],data[15],data[16]]
         };
         try {
-        const response = await fetch("http://localhost:8080/commandes/updateComment", {
-            method: "PUT",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedOrder),
-        });
-        const data = await response.json();
-        console.log(`Comment updated for order ${reference}`);
+            const response = await fetch("http://localhost:8080/commandes/updateOrder", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedOrder),
+            });
+            const data = await response.json();
+            console.log(`Comment updated for order`);
         } catch (error) {
-        console.error(`Error updating comment for order ${reference}: ${error}`);
+            console.error(`Error updating comment for order ${error}`);
         }
     }
 
