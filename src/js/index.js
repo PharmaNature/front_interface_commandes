@@ -60,14 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let conteneurPromo = document.querySelector('.conteneur-promo');
 
     const tableBody = document.getElementById('table-body');
-    const tableFacture = document.getElementById('table-body-facture');
+    const tableFacture = document.getElementById('table-body-factures');
     const tableBordereaux = document.getElementById('table-body-bordereaux');
     const tablePromo = document.getElementById('table-body-promo');
 
     const draggableItems = document.querySelectorAll('.boite-draggable');
     const dropzones = document.querySelectorAll('.dropzone');
     const contenueBoiteDraggable = document.querySelector('.contenue-boite-draggable')
-    titre.textContent = localStorage.getItem('objet');
+
+    if(localStorage.getItem('objet')){
+        titre.textContent = localStorage.getItem('objet');
+    }
 
     renderViewKanban()
     async function renderViewKanban() {
@@ -365,6 +368,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    function displayElementInPopup(popUp,data,textLabel,isReadOnly,indexData,isADate){
+
+        const label = document.createElement("label");
+        label.textContent = textLabel+": ";
+        const input = document.createElement("input");
+        input.type = "text";
+        if (isReadOnly) {
+            input.setAttribute("readonly", "");
+        }
+        if (isADate) {
+            input.value = new Date(data[0][indexData]).toLocaleString().substring(0,10);
+        }else{
+        input.value = data[0][indexData];
+        }
+        const div = document.createElement("div");
+        div.appendChild(label);
+        div.appendChild(input);
+        popUp.appendChild(div);
+    }
+
     function displayPopup(popUp, ref) {
 
         fetch("http://localhost:8080/commandes/getDetailForOneOrder/" + ref)
@@ -372,258 +395,93 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 // Faites quelque chose avec les données récupérées
                 console.log(data);
-
                 // création des éléments du pop up 
-                // reference
-                const refCommandeLabel = document.createElement("label");
-                refCommandeLabel.textContent = "Référence de commande:";
-                const refCommandeInput = document.createElement("input");
-                refCommandeInput.type = "text";
-                refCommandeInput.setAttribute("readonly", "");
-                refCommandeInput.value = data[0][0];
-
-                const divRefCommande = document.createElement("div");
-                divRefCommande.appendChild(refCommandeLabel);
-                divRefCommande.appendChild(refCommandeInput);
-                popUp.appendChild(divRefCommande);
-
-
-                // invoice_number
-                const numFactureLabel = document.createElement("label");
-                numFactureLabel.textContent = "Numéro de facture:";
-                const numFactureInput = document.createElement("input");
-                numFactureInput.type = "text";
-                numFactureInput.setAttribute("readonly", "");
-                numFactureInput.value = data[0][1]
-
-                const divNumFacture = document.createElement("div");
-                divNumFacture.appendChild(numFactureLabel);
-                divNumFacture.appendChild(numFactureInput);
-                popUp.appendChild(divNumFacture);
-
-
-                // state_order
-                const stateOrderLabel = document.createElement("label");
-                stateOrderLabel.textContent = "État de la commande:";
-                const stateOrderInput = document.createElement("input");
-                stateOrderInput.type = "text";
-                stateOrderInput.value = data[0][2];
-
-                const divStateOrder = document.createElement("div");
-                divStateOrder.appendChild(stateOrderLabel);
-                divStateOrder.appendChild(stateOrderInput);
-                popUp.appendChild(divStateOrder);
-
-
-                // customer_message 
-                const customerMessageLabel = document.createElement("label");
-                customerMessageLabel.textContent = "Message du client:";
-                const customerMessageInput = document.createElement("input");
-                customerMessageInput.type = "text";
-                customerMessageInput.value = data[0][3];
+                const elements = [
+                    ["Référence de commande", true, 0, false],
+                    ["Numéro de facture", true, 1, false],
+                    ["État de la commande", false, 2, false],
+                    ["Message du client", false, 3, false],
+                    ["Clé de facture", true, 4, false],
+                    ["Montant TTC", false, 5, false],
+                    ["Montant HT", false, 6, false],
+                    ["Prénom", false, 7, false],
+                    ["Nom", false, 8, false],
+                    ["Numéro de téléphone", false, 9, false],
+                    ["Date de création", true, 10, true],
+                    ["Date de dernière modification", true, 11, true],
+                    ["Mode de paiement", true, 12, false],
+                    ["Mode de livraison", false, 13, false],
+                    ["Identifiant utilisateur", true, 14, false],
+                    ["Site web", false, 15, false],
+                    ["Commentaire", false, 16, false]
+                ];
                 
-                const divCustomerMessage = document.createElement("div");
-                divCustomerMessage.appendChild(customerMessageLabel);
-                divCustomerMessage.appendChild(customerMessageInput);
-                popUp.appendChild(divCustomerMessage);
+                for (let i = 0; i < elements.length; i++) {
+                    const element = elements[i];
+                    displayElementInPopup(popUp, data, element[0], element[1], element[2], element[3]);
+                }
 
-                // invoice_key 
-                const invoiceKeyLabel = document.createElement("label");
-                invoiceKeyLabel.textContent = "Clé de facture:";
-                const invoiceKeyInput = document.createElement("input");
-                invoiceKeyInput.type = "text";
-                invoiceKeyInput.setAttribute("readonly", "");
-                invoiceKeyInput.value = data[0][4];
-
-                const divInvoiceKey = document.createElement("div");
-                divInvoiceKey.appendChild(invoiceKeyLabel);
-                divInvoiceKey.appendChild(invoiceKeyInput);
-                popUp.appendChild(divInvoiceKey);
-
-                // amount_ttc 
-                const amountTTCLabel = document.createElement("label");
-                amountTTCLabel.textContent = "Montant TTC:";
-                const amountTTCInput = document.createElement("input");
-                amountTTCInput.type = "text";
-                amountTTCInput.value = data[0][5];
-
-                const divAmountTTC = document.createElement("div");
-                divAmountTTC.appendChild(amountTTCLabel);
-                divAmountTTC.appendChild(amountTTCInput);
-                popUp.appendChild(divAmountTTC);
-                // amount_ht 
-                const amountHTLabel = document.createElement("label");
-                amountHTLabel.textContent = "Montant HT:";
-                const amountHTInput = document.createElement("input");
-                amountHTInput.type = "text";
-                amountHTInput.value = data[0][6];
-
-                const divAmountHT = document.createElement("div");
-                divAmountHT.appendChild(amountHTLabel);
-                divAmountHT.appendChild(amountHTInput);
-                popUp.appendChild(divAmountHT);
-                // firstname 
-                const firstNameLabel = document.createElement("label");
-                firstNameLabel.textContent = "Prénom:";
-                const firstNameInput = document.createElement("input");
-                firstNameInput.type = "text";
-                firstNameInput.value = data[0][7];
-                
-                const divFirstName = document.createElement("div");
-                divFirstName.appendChild(firstNameLabel);
-                divFirstName.appendChild(firstNameInput);
-                popUp.appendChild(divFirstName);
-                // forename  
-                const nomClientLabel = document.createElement("label");
-                nomClientLabel.textContent = "Nom du client:";
-                const nomClientInput = document.createElement("input");
-                nomClientInput.type = "text";
-                nomClientInput.value = data[0][8]
-
-                const divNomClient = document.createElement("div");
-                divNomClient.appendChild(nomClientLabel);
-                divNomClient.appendChild(nomClientInput);
-                popUp.appendChild(divNomClient);
-
-                // phone_number
-                const phoneNumberLabel = document.createElement("label");
-                phoneNumberLabel.textContent = "Numéro de téléphone:";
-                const phoneNumberInput = document.createElement("input");
-                phoneNumberInput.type = "text";
-                phoneNumberInput.value = data[0][9];
-
-                const divPhoneNumber = document.createElement("div");
-                divPhoneNumber.appendChild(phoneNumberLabel);
-                divPhoneNumber.appendChild(phoneNumberInput);
-                popUp.appendChild(divPhoneNumber);
-
-                // creation_date
-                const creationDateLabel = document.createElement("label");
-                creationDateLabel.textContent = "Date de création:";
-                const creationDateInput = document.createElement("input");
-                creationDateInput.type = "text";
-                creationDateInput.setAttribute("readonly", "");
-                creationDateInput.value = new Date(data[0][10]).toISOString().substring(0, 10);
-
-                const divCreationDate = document.createElement("div");
-                divCreationDate.appendChild(creationDateLabel);
-                divCreationDate.appendChild(creationDateInput);
-                popUp.appendChild(divCreationDate);
-
-                // date_last_changed
-                const dateLastChangedLabel = document.createElement("label");
-                dateLastChangedLabel.textContent = "Date de dernière modification:";
-                const dateLastChangedInput = document.createElement("input");
-                dateLastChangedInput.type = "text";
-                dateLastChangedInput.setAttribute("readonly", "");
-                dateLastChangedInput.value = new Date(data[0][11]).toISOString().substring(0, 10);
-
-                const divDateLastChanged = document.createElement("div");
-                divDateLastChanged.appendChild(dateLastChangedLabel);
-                divDateLastChanged.appendChild(dateLastChangedInput);
-                popUp.appendChild(divDateLastChanged);
-
-                // payment_mode
-                const paymentModeLabel = document.createElement("label");
-                paymentModeLabel.textContent = "Mode de paiement:";
-                const paymentModeInput = document.createElement("input");
-                paymentModeInput.type = "text";
-                paymentModeInput.setAttribute("readonly", "");
-                paymentModeInput.value = data[0][12];
-
-                const divPaymentMode = document.createElement("div");
-                divPaymentMode.appendChild(paymentModeLabel);
-                divPaymentMode.appendChild(paymentModeInput);
-                popUp.appendChild(divPaymentMode);
-
-                // delivery_label
-                const deliveryLabelLabel = document.createElement("label");
-                deliveryLabelLabel.textContent = "Mode de livraison:";
-                const deliveryLabelInput = document.createElement("input");
-                deliveryLabelInput.type = "text";
-                deliveryLabelInput.value = data[0][13];
-
-                const divDeliveryLabel = document.createElement("div");
-                divDeliveryLabel.appendChild(deliveryLabelLabel);
-                divDeliveryLabel.appendChild(deliveryLabelInput);
-                popUp.appendChild(divDeliveryLabel);
-
-                // user_id
-                const userIdLabel = document.createElement("label");
-                userIdLabel.textContent = "Identifiant utilisateur:";
-                const userIdInput = document.createElement("input");
-                userIdInput.type = "text";
-                userIdInput.setAttribute("readonly", "");
-                userIdInput.value = data[0][14];
-
-                const divUserId = document.createElement("div");
-                divUserId.appendChild(userIdLabel);
-                divUserId.appendChild(userIdInput);
-                popUp.appendChild(divUserId);
-
-                // web_site
-                const webSiteLabel = document.createElement("label");
-                webSiteLabel.textContent = "Site web:";
-                const webSiteInput = document.createElement("input");
-                webSiteInput.type = "text";
-                webSiteInput.value = data[0][15];
-
-                const divWebSite = document.createElement("div");
-                divWebSite.appendChild(webSiteLabel);
-                divWebSite.appendChild(webSiteInput);
-                popUp.appendChild(divWebSite);
-
-                // comment
-                const commentaireLabel = document.createElement("label");
-                commentaireLabel.textContent = "Commentaire:";
-                const commentaireInput = document.createElement("input");
-                commentaireInput.type = "text";
-                commentaireInput.value = data[0][16]
-
-                const divCommentaire = document.createElement("div");
-                divCommentaire.appendChild(commentaireLabel);
-                divCommentaire.appendChild(commentaireInput);
-                popUp.appendChild(divCommentaire);
-                
-
-                
                 // Etiquette de livraison (fichier pdf)
                 const detailcommandeLabel = document.createElement("label");
                 detailcommandeLabel.textContent = "Etiquette de livraison:";
                 const lienDetailCommande = document.createElement("a");
-                lienDetailCommande.textContent = "Cliquez ici pour voir l'étiquette de livraison";
-                lienDetailCommande.addEventListener("click", function() {
+                lienDetailCommande.textContent = "Télécharger";
+                const imgEtiquette = document.createElement("img");
+                imgEtiquette.src = "../../tools/svg/download.svg";
+                imgEtiquette.alt = "Etiquette de livraison";
+                imgEtiquette.classList.add("icon-svg-xl"); // Ajout de la classe
+                lienDetailCommande.appendChild(imgEtiquette);
+                lienDetailCommande.addEventListener("click", function () {
                     // getDeliveryLabel(data[0][0])
                     getDeliveryLabel("ref001")
+                    // TOCHANGE
                 });
-                lienDetailCommande.target = "_blank"
-                lienDetailCommande.style.color = "blue";
-                lienDetailCommande.style.textDecoration = "underline";
+                imgEtiquette.addEventListener("click", function () {
+                    // getDeliveryLabel(data[0][0])
+                    getDeliveryLabel("ref001")
+                    // TOCHANGE
+                });
+                lienDetailCommande.classList.add('lien-detail-commande');
 
                 const divDetailCommande = document.createElement("div");
-                divDetailCommande.appendChild(detailcommandeLabel);
+                divDetailCommande.classList.add('div-svg-lien_popUp')
+                divDetailCommande.appendChild(imgEtiquette);
                 divDetailCommande.appendChild(lienDetailCommande);
+                detailcommandeLabel.appendChild(divDetailCommande);
 
-                popUp.appendChild(divDetailCommande)
+                popUp.appendChild(detailcommandeLabel);
 
                 // Facture de la commande (fichier pdf)
                 const invoiceCommandeLabel = document.createElement("label");
                 invoiceCommandeLabel.textContent = "Facture de la commande:";
-                const invoiceCommande = document.createElement("a");
-                invoiceCommande.textContent = "Cliquez ici pour voir la facture de la commande";
-                invoiceCommande.addEventListener("click", function() {
+                const lienInvoiceCommande = document.createElement("a");
+                lienInvoiceCommande.textContent = "Télécharger";
+                const imgFacture = document.createElement('img')
+                imgFacture.src = "../../tools/svg/download.svg";
+                imgFacture.alt = "Facture de la commande";
+                imgFacture.classList.add("icon-svg-xl"); // Ajout de la classe
+                lienInvoiceCommande.appendChild(imgFacture);
+                lienInvoiceCommande.addEventListener("click", function () {
                     // getInvoice(data[0][0])
                     getInvoice("ref001")
+                    // TOCHANGE
+
                 });
-                invoiceCommande.target = "_blank"
-                invoiceCommande.style.color = "blue";
-                invoiceCommande.style.textDecoration = "underline";
+                imgFacture.addEventListener("click", function () {
+                    // getInvoice(data[0][0])
+                    getInvoice("ref001")
+                    // TOCHANGE
+
+                });
+                lienInvoiceCommande.classList.add('lien-detail-commande');
 
                 const divInvoiceCommande = document.createElement("div");
-                divInvoiceCommande.appendChild(invoiceCommandeLabel);
-                divInvoiceCommande.appendChild(invoiceCommande);
+                divInvoiceCommande.classList.add('div-svg-lien_popUp')
+                divInvoiceCommande.appendChild(imgFacture);
+                divInvoiceCommande.appendChild(lienInvoiceCommande);
+                invoiceCommandeLabel.appendChild(divInvoiceCommande);
 
-                popUp.appendChild(divInvoiceCommande)
+                popUp.appendChild(invoiceCommandeLabel);
 
                 // création du bouton Enregistrer
                 const enregistrerButton = document.createElement("button");
@@ -638,6 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     data[0][7] = firstNameInput.value
                     data[0][8] = nomClientInput.value
                     data[0][9] = phoneNumberInput.value
+                    data[0][11] = new Date().toUTCString()
                     data[0][13] = deliveryLabelInput.value
                     data[0][15] = webSiteInput.value
                     data[0][16] = commentaireInput.value
@@ -772,6 +631,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
     }
+
+    renderTableInvoice();
+
+    async function renderTableInvoice() {
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+            .then(async res => {
+                const data = await res.json();
+
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i];
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${new Date(item[10]).toISOString().substring(0, 10)}</td>
+                    <td class="showInvoiceInRenderTableInvoice" data-ref="${item[0]}">
+                    <img src="../../tools/svg/download.svg" class="icon-svg-xl" alt="Facture" /> FACTURE
+                    </td>
+                    <td class="showLabelInRenderTableInvoice" data-ref="${item[0]}">
+                    <img src="../../tools/svg/download.svg" class="icon-svg-xl" alt="Étiquette" /> ETIQUETTE
+                    </td>
+                    <td>${item[15]}</td>
+                    `;
+                    tableFacture.appendChild(row);
+                }
+                // Ajouter des écouteurs d'événements "click" aux éléments avec les classes "showInvoiceInRenderTableInvoice" et "showLabelInRenderTableInvoice"
+                const showInvoiceButtons = document.querySelectorAll('.showInvoiceInRenderTableInvoice');
+                showInvoiceButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        let ref = e.target.dataset.ref;
+                        console.log(ref);
+                        getInvoice('ref001')
+                        //getInvoice(ref);
+                        // TOCHANGE
+                    });
+                });
+                
+                const showLabelButtons = document.querySelectorAll('.showLabelInRenderTableInvoice');
+                showLabelButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        let ref = e.target.dataset.ref;
+                        console.log(ref);
+                        //getDeliveryLabel(ref);
+                        // TOCHANGE
+
+                    });
+                });
+            });
+    }
+
 
     async function updateStateOrder(newState, ref) {
         switch (newState) {
