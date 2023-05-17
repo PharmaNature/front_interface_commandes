@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const color = {
     "litige_en_attente": {
         "code": "#622ca0",
@@ -75,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderViewKanban()
     async function renderViewKanban() {
 
-        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial())
+        fetch('http://'+process.env.URL+':8080/commandes/getForViewKanban/' + initial())
             .then(async res => {
                 const data = await res.json();
                 // Récupération de la zone de drop
@@ -151,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     let key = "ref001";
 
-                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key)
+                    fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/' + key)
                         .then(async response => await response.blob())
                         .then(data => {
                             const pdfBlob = new Blob([data], { type: 'application/pdf' });
@@ -390,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayPopup(popUp, ref) {
 
-        fetch("http://localhost:8080/commandes/getDetailForOneOrder/" + ref)
+        fetch('http://'+process.env.URL+':8080/commandes/getDetailForOneOrder/' + ref)
             .then(response => response.json())
             .then(data => {
                 // Faites quelque chose avec les données récupérées
@@ -520,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15],data[16]]
         };
         try {
-            const response = await fetch("http://localhost:8080/commandes/updateOrder", {
+            const response = await fetch('http://'+process.env.URL+':8080/commandes/updateOrder', {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -537,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getDeliveryLabel(ref) {
         console.log("getDeliveryLabel "+ ref)
         try {
-            const response = await fetch("http://localhost:8080/s3/downloadFile/delivery_label/"+ref, {
+            const response = await fetch('http://'+process.env.URL+':8080/s3/downloadFile/delivery_label/'+ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -557,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getInvoice(ref) {
         console.log("getDeliveryLabel "+ ref)
         try {
-            const response = await fetch("http://localhost:8080/s3/downloadFile/invoice/"+ref, {
+            const response = await fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/'+ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -595,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function renderTableOrder() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+        fetch('http://'+process.env.URL+':8080/commandes/getByEtat/' + initial())
             .then(async res => {
                 const data = await res.json();
                 for (let i = 0; i < data.length; i++) {
@@ -635,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTableInvoice();
 
     async function renderTableInvoice() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+        fetch('http://'+process.env.URL+':8080/commandes/getByEtat/' + initial())
             .then(async res => {
                 const data = await res.json();
 
@@ -717,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "ref": ref,
             "newState": newState
         }
-        fetch('http://localhost:8080/commandes/updateStateOrder', {
+        fetch('http://'+process.env.URL+':8080/commandes/updateStateOrder', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
