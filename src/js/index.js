@@ -1,41 +1,42 @@
 const color = {
     "litige_en_attente": {
-      "code": "#622ca0",
-      "label": "litige en attente"
+        "code": "#622ca0",
+        "label": "litige en attente"
     },
     "commande_payee": {
-      "code": "#cce0fe",
-      "label": "commande payée"
+        "code": "#cce0fe",
+        "label": "commande payée"
     },
     "bloque": {
-      "code": "#ffdccc",
-      "label": "Bloqué"
+        "code": "#ffdccc",
+        "label": "Bloqué"
     },
     "modification": {
-      "code": "#e2d5f7",
-      "label": "Modification"
+        "code": "#e2d5f7",
+        "label": "Modification"
     },
     "a_prepare": {
-      "code": "#cef5d2",
-      "label": "Commande à préparer"
+        "code": "#cef5d2",
+        "label": "Commande à préparer"
     },
     "en_cours": {
-      "code": "#cef5d2",
-      "label": "En cours de préparation"
+        "code": "#cef5d2",
+        "label": "En cours de préparation"
     },
     "pret": {
-      "code": "#ceedfa",
-      "label": "Colis préapré"
+        "code": "#ceedfa",
+        "label": "Colis préapré"
     },
     "livraison": {
-      "code": "#ffd4df",
-      "label": "livraison"
+        "code": "#ffd4df",
+        "label": "livraison"
     },
     "retour_annule": {
-      "code": "#fcccf0",
-      "label": "retourné/annulé"
+        "code": "#fcccf0",
+        "label": "retourné/annulé"
     }
-  };
+};
+
 
 document.addEventListener('DOMContentLoaded', () => {
     let ongletActive = document.querySelector('.active-conteneur-texte-onglet');
@@ -59,160 +60,164 @@ document.addEventListener('DOMContentLoaded', () => {
     let conteneurPromo = document.querySelector('.conteneur-promo');
 
     const tableBody = document.getElementById('table-body');
-    const tableFacture = document.getElementById('table-body-facture');
+    const tableFacture = document.getElementById('table-body-factures');
     const tableBordereaux = document.getElementById('table-body-bordereaux');
-    const tablePromo= document.getElementById('table-body-promo');
+    const tablePromo = document.getElementById('table-body-promo');
 
     const draggableItems = document.querySelectorAll('.boite-draggable');
     const dropzones = document.querySelectorAll('.dropzone');
     const contenueBoiteDraggable = document.querySelector('.contenue-boite-draggable')
 
-    titre.textContent = localStorage.getItem('objet');
+    if(localStorage.getItem('objet')){
+        titre.textContent = localStorage.getItem('objet');
+    }
 
     renderViewKanban()
-      
-    async function renderViewKanban(){
-        fetch('http://localhost:8080/commandes/getForViewKanban/' +initial())
-        .then(async res => {
-            const data = await res.json();
-            // Récupération de la zone de drop
-            const dropzone_litige = document.getElementById("dropzone1");
-            const dropzone_payee = document.getElementById("dropzone2");
-            const dropzone_bloque = document.getElementById("dropzone3");
-            const dropzone_modification = document.getElementById("dropzone4");
-            const dropzone_a_prepare = document.getElementById("dropzone5");
-            const dropzone_en_cours = document.getElementById("dropzone6");
-            const dropzone_pret = document.getElementById("dropzone7");
-            // Création des éléments boite-draggable pour chaque élément dans les données
-            data.forEach((item, i) => {
+    async function renderViewKanban() {
 
-                // Création de la boite-draggable
-                const boiteDraggable = document.createElement("div");
-                boiteDraggable.classList.add("boite-draggable");
-                boiteDraggable.id = "item" + (i + 1);
-                boiteDraggable.draggable = true;
+        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial())
+            .then(async res => {
+                const data = await res.json();
+                // Récupération de la zone de drop
+                const dropzone_litige = document.getElementById("dropzone1");
+                const dropzone_payee = document.getElementById("dropzone2");
+                const dropzone_bloque = document.getElementById("dropzone3");
+                const dropzone_modification = document.getElementById("dropzone4");
+                const dropzone_a_prepare = document.getElementById("dropzone5");
+                const dropzone_en_cours = document.getElementById("dropzone6");
+                const dropzone_pret = document.getElementById("dropzone7");
+                // Création des éléments boite-draggable pour chaque élément dans les données
+                data.forEach((item, i) => {
 
-                // Création du contenu
-                const imgDraggable = document.createElement("div");
-                imgDraggable.classList.add("contenue-img-draggable");
+                    // Création de la boite-draggable
+                    const boiteDraggable = document.createElement("div");
+                    boiteDraggable.classList.add("boite-draggable");
+                    boiteDraggable.id = "item" + (i + 1);
+                    boiteDraggable.draggable = true;
 
-                const contenueDraggable = document.createElement("div");
-                contenueDraggable.classList.add("contenue-boite-draggable");
-                contenueDraggable.innerHTML = `
+                    // Création du contenu
+                    const imgDraggable = document.createElement("div");
+                    imgDraggable.classList.add("contenue-img-draggable");
+
+                    const contenueDraggable = document.createElement("div");
+                    contenueDraggable.classList.add("contenue-boite-draggable");
+                    contenueDraggable.innerHTML = `
                     <h5 class="titre-div-draggable">${item[1]}</h5>
                     <p class="sous-titre-div-draggable">NOM DU CLIENT</p>
                     <p class="valeur-sous-titre">${item[7]}</p>
                     <p class="sous-titre-div-draggable">REF COMMANDE</p>
                     <p class="valeur-sous-titre">${item[0]}</p>
                     <p class="sous-titre-div-draggable">MONTANT EN TTC</p>
-                    <p class="valeur-sous-titre">${"€"+item[4]}</p>
+                    <p class="valeur-sous-titre">${"€" + item[4]}</p>
                     `;
 
-                // Ajout des éléments dans la boite-draggable
-                
-                boiteDraggable.appendChild(imgDraggable);
-                boiteDraggable.appendChild(contenueDraggable);
+                    // Ajout des éléments dans la boite-draggable
 
-                boiteDraggable.addEventListener("dblclick", handleDoubleClick)
-                boiteDraggable.addEventListener("dragstart", handleDragStart);
-                boiteDraggable.addEventListener("dragend", handleDragEnd);
-                boiteDraggable.addEventListener("dragover", handleDragOver);
-                boiteDraggable.addEventListener("dragleave", handleDragLeave);
-                boiteDraggable.addEventListener("drop", handleDrop);
+                    boiteDraggable.appendChild(imgDraggable);
+                    boiteDraggable.appendChild(contenueDraggable);
 
-                // Ajout de la boite-draggable dans la dropzone
-                switch(item[2]){
-                    case "litige_en_cours":
-                        dropzone_litige.appendChild(boiteDraggable);
-                        break;
-                    case "commande_payee":
-                        dropzone_payee.appendChild(boiteDraggable);
-                        break;
-                    case "bloque":
-                        dropzone_bloque.appendChild(boiteDraggable);
-                        break;
-                    case "modification":
-                        dropzone_modification.appendChild(boiteDraggable);
-                        break;
-                    case "a_prepare":
-                        dropzone_a_prepare.appendChild(boiteDraggable);
-                        break;
-                    case "en_cours":
-                        dropzone_en_cours.appendChild(boiteDraggable);
-                        break;
-                    case "pret":
-                        dropzone_pret.appendChild(boiteDraggable);
-                        break;
-                    default :
-                        dropzone_litige.appendChild(boiteDraggable);
-                }
-                let key = "ref001";
+                    boiteDraggable.addEventListener("dblclick", handleDoubleClick)
+                    boiteDraggable.addEventListener("dragstart", handleDragStart);
+                    boiteDraggable.addEventListener("dragend", handleDragEnd);
+                    boiteDraggable.addEventListener("dragover", handleDragOver);
+                    boiteDraggable.addEventListener("dragleave", handleDragLeave);
+                    boiteDraggable.addEventListener("drop", handleDrop);
 
-                fetch('http://localhost:8080/s3/downloadFile/invoice/'+key)
-                .then(async response => await response.blob())
-                .then(data => {
-                    const pdfBlob = new Blob([data], { type: 'application/pdf' });
-                    const pdfUrl = URL.createObjectURL(pdfBlob);
-                    const embed = document.createElement('embed');
-                    embed.src = pdfUrl;
-                    embed.classList.add('pdf-embed');
-                    imgDraggable.appendChild(embed);
-                })
-                .catch(error => console.error(error));
-            });
-        })
+                    // Ajout de la boite-draggable dans la dropzone
+                    switch (item[2]) {
+                        case "litige_en_cours":
+                            dropzone_litige.appendChild(boiteDraggable);
+                            break;
+                        case "commande_payee":
+                            dropzone_payee.appendChild(boiteDraggable);
+                            break;
+                        case "bloque":
+                            dropzone_bloque.appendChild(boiteDraggable);
+                            break;
+                        case "modification":
+                            dropzone_modification.appendChild(boiteDraggable);
+                            break;
+                        case "a_prepare":
+                            dropzone_a_prepare.appendChild(boiteDraggable);
+                            break;
+                        case "en_cours":
+                            dropzone_en_cours.appendChild(boiteDraggable);
+                            break;
+                        case "pret":
+                            dropzone_pret.appendChild(boiteDraggable);
+                            break;
+                        default:
+                            dropzone_litige.appendChild(boiteDraggable);
+                    }
+                    let key = "ref001";
+
+                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key)
+                        .then(async response => await response.blob())
+                        .then(data => {
+                            const pdfBlob = new Blob([data], { type: 'application/pdf' });
+                            const pdfUrl = URL.createObjectURL(pdfBlob);
+                            const embed = document.createElement('embed');
+                            embed.src = pdfUrl;
+                            embed.classList.add('pdf-embed');
+                            imgDraggable.appendChild(embed);
+                        })
+                        .catch(error => console.error(error));
+                });
+            })
     }
 
     // permet de masquer ou afficher le contenue visé en fonction de l'onglet sélectionné
-    function affichageContenuOnglet(){
+    function affichageContenuOnglet() {
+
+
         let tabConteneur = [listeVues, conteneurBoiteKanban, conteneurBordereau, conteneurFacture, conteneurPromo, conteneurTableau];
-        switch(ongletActive.textContent){
+        switch (ongletActive.textContent) {
             case "Commandes":
-                for(i = 0; i < tabConteneur.length; i++){
-                    if(!tabConteneur[i].classList.contains('invisible')){
+                for (i = 0; i < tabConteneur.length; i++) {
+                    if (!tabConteneur[i].classList.contains('invisible')) {
                         tabConteneur[i].classList.add('invisible');
                     }
                 }
-                if(tabConteneur[1].classList.contains('invisible')){
+                if (tabConteneur[1].classList.contains('invisible')) {
                     tabConteneur[1].classList.remove('invisible');
                 }
-                if(tabConteneur[0].classList.contains('invisible')){
+                if (tabConteneur[0].classList.contains('invisible')) {
                     tabConteneur[0].classList.remove('invisible');
                 }
                 break;
             case "Factures & Etiquettes":
-                for(i = 0; i < tabConteneur.length; i++){
-                    if(!tabConteneur[i].classList.contains('invisible')){
+                for (i = 0; i < tabConteneur.length; i++) {
+                    if (!tabConteneur[i].classList.contains('invisible')) {
                         tabConteneur[i].classList.add('invisible');
                     }
                 }
-                if(tabConteneur[3].classList.contains('invisible')){
+                if (tabConteneur[3].classList.contains('invisible')) {
                     tabConteneur[3].classList.remove('invisible');
                 }
                 break;
             case "Bordereaux":
-                for(i = 0; i < tabConteneur.length; i++){
-                    if(!tabConteneur[i].classList.contains('invisible')){
+                for (i = 0; i < tabConteneur.length; i++) {
+                    if (!tabConteneur[i].classList.contains('invisible')) {
                         tabConteneur[i].classList.add('invisible');
                     }
                 }
-                if(tabConteneur[2].classList.contains('invisible')){
+                if (tabConteneur[2].classList.contains('invisible')) {
                     tabConteneur[2].classList.remove('invisible');
                 }
                 break;
             case "Codes promo":
-                for(i = 0; i < tabConteneur.length; i++){
-                    if(!tabConteneur[i].classList.contains('invisible')){
+                for (i = 0; i < tabConteneur.length; i++) {
+                    if (!tabConteneur[i].classList.contains('invisible')) {
                         tabConteneur[i].classList.add('invisible');
                     }
                 }
-                if(tabConteneur[4].classList.contains('invisible')){
+                if (tabConteneur[4].classList.contains('invisible')) {
                     tabConteneur[4].classList.remove('invisible');
                 }
                 break;
         }
         //restaure la vue numéro 1 comme active dans le cas où on aurait cliqué sur les onglets avec en vue : Tableau de suivie - par état
-        if(vueActive == vues[1]){
+        if (vueActive == vues[1]) {
             vues[0].classList.add('active');
             vues[1].classList.remove('active');
             vueActive = vues[0];
@@ -220,21 +225,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // permet de masquer ou d'afficher le contnue visé en fonction de la vue selectionné
-    function affichageContenuView(i){
+    function affichageContenuView(i) {
+
+
         let textvu = document.querySelectorAll('.texte-vue');
         let tabViews = [conteneurBoiteKanban, conteneurTableau];
 
-        for(let j = 0; j < tabViews.length; j++){
+        for (let j = 0; j < tabViews.length; j++) {
             tabViews[j].classList.add('invisible');
         }
 
-        if(tabViews[i].classList.contains('invisible')){
+        if (tabViews[i].classList.contains('invisible')) {
             tabViews[i].classList.remove('invisible');
         }
     }
 
     // permet de donner la bonne class pour le bon onglet (tableau du haut)
-    for (let i = 0; i < onglets.length; i++){
+    for (let i = 0; i < onglets.length; i++) {
+
+
         onglets[i].addEventListener('click', () => {
             onglets[i].classList.add('active-conteneur-texte-onglet');
             li[i].classList.add('active-text-onglet');
@@ -247,9 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // permet de donner la class active pour la bonne vue (tableau de gauche)
-    for (let i = 0; i < vues.length; i++){
-        vues[i].addEventListener('click', () =>{
-            if (!vues[i].classList.contains('active')){
+    for (let i = 0; i < vues.length; i++) {
+
+
+        vues[i].addEventListener('click', () => {
+            if (!vues[i].classList.contains('active')) {
                 vues[i].classList.add('active');
                 vueActive.classList.remove('active');
                 vueActive = vues[i];
@@ -257,25 +268,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderTableOrder();
             }
         })
-    }   
+    }
 
     btnDeroulant.addEventListener('click', () => {
-        if(menuObjets.classList.contains('menu-deroulant')){
+
+
+        if (menuObjets.classList.contains('menu-deroulant')) {
             menuObjets.classList.remove('menu-deroulant');
             menuObjets.classList.add('menu-deroulant-visible');
-        }else {
+        } else {
             menuObjets.classList.add('menu-deroulant');
             menuObjets.classList.remove('menu-deroulant-visible');
         }
-        for (let i = 0; i < objets.length; i++){
+        for (let i = 0; i < objets.length; i++) {
             objets[i].addEventListener('click', () => {
-                localStorage.setItem('objet', 'Commandes - Site '+objets[i].textContent)
+                console.log("1")
+                localStorage.setItem('objet', 'Commandes - Site ' + objets[i].textContent)
                 location.reload()
             })
         }
-        if(menuObjets.classList.contains('menu-deroulant-visible')){      
+        if (menuObjets.classList.contains('menu-deroulant-visible')) {
             document.addEventListener('click', (event) => {
-                if(event.target.classList != 'titre-header'){
+                if (event.target.classList != 'titre-header') {
                     menuObjets.classList.add('menu-deroulant');
                     menuObjets.classList.remove('menu-deroulant-visible');
                 }
@@ -287,27 +301,27 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener("dragstart", handleDragStart);
         item.addEventListener("dragend", handleDragEnd);
     });
-    
+
     dropzones.forEach((zone) => {
         zone.addEventListener("dragover", handleDragOver);
         zone.addEventListener("dragleave", handleDragLeave);
         zone.addEventListener("drop", handleDrop);
     });
-    
+
     function handleDragStart(e) {
         e.dataTransfer.setData("text/plain", e.target.id);
         e.target.classList.add("dragging");
     }
-    
+
     function handleDragEnd(e) {
         e.target.classList.remove("dragging");
     }
-    
+
     function handleDragOver(e) {
         e.preventDefault();
         e.target.classList.add("dropzone-over");
     }
-    
+
     function handleDragLeave(e) {
         e.target.classList.remove("dropzone-over");
     }
@@ -318,18 +332,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const draggedItem = document.getElementById(draggedItemId);
         const targetZone = e.target.closest('.dropzone');
         if (targetZone && targetZone !== draggedItem.closest('.dropzone')) {
-          targetZone.appendChild(draggedItem);
-          const zoneName = targetZone.getAttribute('id');
-          let i = draggedItem.children;
-          let j = i[1].children
-          updateStateOrder(zoneName, j[4].textContent);
+            targetZone.appendChild(draggedItem);
+            const zoneName = targetZone.getAttribute('id');
+            let i = draggedItem.children;
+            let j = i[1].children
+            updateStateOrder(zoneName, j[4].textContent);
         }
         dropzones.forEach((zone) => {
-          zone.classList.remove("dropzone-over");
+            zone.classList.remove("dropzone-over");
         })
     }
 
-    function handleDoubleClick(e){
+    function handleDoubleClick(e) {
+
+
         const overlayDiv = document.createElement("div");
         overlayDiv.id = "overlay";
         document.body.appendChild(overlayDiv);
@@ -337,29 +353,240 @@ document.addEventListener('DOMContentLoaded', () => {
         const popUp = document.createElement("div");
         popUp.id = "centered";
         document.body.appendChild(popUp);
-        if(popUp){
+        if (popUp) {
             document.addEventListener('click', (event) => {
-                if(event.target !== popUp){
-                    document.body.removeChild(overlayDiv);
+                if (!popUp.contains(event.target)) {
                     document.body.removeChild(popUp);
+                    const overlay = document.getElementById("overlay")
+                    overlay.parentNode.removeChild(overlay)
                 }
             })
         }
         let ref = e.target.parentNode.children[4].textContent
+        displayPopup(popUp, ref)
+
+
     }
 
-    async function colorForState(state){
+    function displayElementInPopup(popUp,data,textLabel,isReadOnly,indexData,isADate){
+
+        const label = document.createElement("label");
+        label.textContent = textLabel+": ";
+        const input = document.createElement("input");
+        input.type = "text";
+        if (isReadOnly) {
+            input.setAttribute("readonly", "");
+        }
+        if (isADate) {
+            input.value = new Date(data[0][indexData]).toLocaleString().substring(0,10);
+        }else{
+        input.value = data[0][indexData];
+        }
+        const div = document.createElement("div");
+        div.appendChild(label);
+        div.appendChild(input);
+        popUp.appendChild(div);
+    }
+
+    function displayPopup(popUp, ref) {
+
+        fetch("http://localhost:8080/commandes/getDetailForOneOrder/" + ref)
+            .then(response => response.json())
+            .then(data => {
+                // Faites quelque chose avec les données récupérées
+                console.log(data);
+                // création des éléments du pop up 
+                const elements = [
+                    ["Référence de commande", true, 0, false],
+                    ["Numéro de facture", true, 1, false],
+                    ["État de la commande", false, 2, false],
+                    ["Message du client", false, 3, false],
+                    ["Clé de facture", true, 4, false],
+                    ["Montant TTC", false, 5, false],
+                    ["Montant HT", false, 6, false],
+                    ["Prénom", false, 7, false],
+                    ["Nom", false, 8, false],
+                    ["Numéro de téléphone", false, 9, false],
+                    ["Date de création", true, 10, true],
+                    ["Date de dernière modification", true, 11, true],
+                    ["Mode de paiement", true, 12, false],
+                    ["Mode de livraison", false, 13, false],
+                    ["Identifiant utilisateur", true, 14, false],
+                    ["Site web", false, 15, false],
+                    ["Commentaire", false, 16, false]
+                ];
+                
+                for (let i = 0; i < elements.length; i++) {
+                    const element = elements[i];
+                    displayElementInPopup(popUp, data, element[0], element[1], element[2], element[3]);
+                }
+
+                // Etiquette de livraison (fichier pdf)
+                const detailcommandeLabel = document.createElement("label");
+                detailcommandeLabel.textContent = "Etiquette de livraison:";
+                const lienDetailCommande = document.createElement("a");
+                lienDetailCommande.textContent = "Télécharger";
+                const imgEtiquette = document.createElement("img");
+                imgEtiquette.src = "../../tools/svg/download.svg";
+                imgEtiquette.alt = "Etiquette de livraison";
+                imgEtiquette.classList.add("icon-svg-xl"); // Ajout de la classe
+                lienDetailCommande.appendChild(imgEtiquette);
+                lienDetailCommande.addEventListener("click", function () {
+                    // getDeliveryLabel(data[0][0])
+                    getDeliveryLabel("ref001")
+                    // TOCHANGE
+                });
+                imgEtiquette.addEventListener("click", function () {
+                    // getDeliveryLabel(data[0][0])
+                    getDeliveryLabel("ref001")
+                    // TOCHANGE
+                });
+                lienDetailCommande.classList.add('lien-detail-commande');
+
+                const divDetailCommande = document.createElement("div");
+                divDetailCommande.classList.add('div-svg-lien_popUp')
+                divDetailCommande.appendChild(imgEtiquette);
+                divDetailCommande.appendChild(lienDetailCommande);
+                detailcommandeLabel.appendChild(divDetailCommande);
+
+                popUp.appendChild(detailcommandeLabel);
+
+                // Facture de la commande (fichier pdf)
+                const invoiceCommandeLabel = document.createElement("label");
+                invoiceCommandeLabel.textContent = "Facture de la commande:";
+                const lienInvoiceCommande = document.createElement("a");
+                lienInvoiceCommande.textContent = "Télécharger";
+                const imgFacture = document.createElement('img')
+                imgFacture.src = "../../tools/svg/download.svg";
+                imgFacture.alt = "Facture de la commande";
+                imgFacture.classList.add("icon-svg-xl"); // Ajout de la classe
+                lienInvoiceCommande.appendChild(imgFacture);
+                lienInvoiceCommande.addEventListener("click", function () {
+                    // getInvoice(data[0][0])
+                    getInvoice("ref001")
+                    // TOCHANGE
+
+                });
+                imgFacture.addEventListener("click", function () {
+                    // getInvoice(data[0][0])
+                    getInvoice("ref001")
+                    // TOCHANGE
+
+                });
+                lienInvoiceCommande.classList.add('lien-detail-commande');
+
+                const divInvoiceCommande = document.createElement("div");
+                divInvoiceCommande.classList.add('div-svg-lien_popUp')
+                divInvoiceCommande.appendChild(imgFacture);
+                divInvoiceCommande.appendChild(lienInvoiceCommande);
+                invoiceCommandeLabel.appendChild(divInvoiceCommande);
+
+                popUp.appendChild(invoiceCommandeLabel);
+
+                // création du bouton Enregistrer
+                const enregistrerButton = document.createElement("button");
+                enregistrerButton.type = "submit"
+                enregistrerButton.textContent = "Enregistrer";
+                enregistrerButton.addEventListener("click", () => {
+                    
+                    data[0][2] = stateOrderInput.value
+                    data[0][3] = customerMessageInput.value
+                    data[0][5] = amountTTCInput.value
+                    data[0][6] = amountHTInput.value
+                    data[0][7] = firstNameInput.value
+                    data[0][8] = nomClientInput.value
+                    data[0][9] = phoneNumberInput.value
+                    data[0][11] = new Date().toUTCString()
+                    data[0][13] = deliveryLabelInput.value
+                    data[0][15] = webSiteInput.value
+                    data[0][16] = commentaireInput.value
+
+                    console.log(data[0])
+                    updateOrder(data[0]);
+                });
+                const divEnregistrer = document.createElement("div");
+                divEnregistrer.appendChild(enregistrerButton);
+                popUp.appendChild(divEnregistrer)
+            })
+            .catch(error => {
+                // Gérez les erreurs de requête
+                console.error(error);
+            });
+    }
+
+    async function updateOrder(data) {
+        console.log(data);
+        const updatedOrder = {
+            data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15],data[16]]
+        };
+        try {
+            const response = await fetch("http://localhost:8080/commandes/updateOrder", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedOrder),
+            });
+            const data = await response.json();
+            console.log(`Comment updated for order`);
+        } catch (error) {
+            console.error(`Error updating comment for order ${error}`);
+        }
+    }
+
+    async function getDeliveryLabel(ref) {
+        console.log("getDeliveryLabel "+ ref)
+        try {
+            const response = await fetch("http://localhost:8080/s3/downloadFile/delivery_label/"+ref, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if(response.ok){
+                const data = await response.blob();
+                const url = URL.createObjectURL(data)
+
+                window.open(url)
+            }
+            console.log(`Get delivery label from order`);
+        } catch (error) {
+            console.error(`Error updating comment for order ${error}`);
+        }
+    }
+    async function getInvoice(ref) {
+        console.log("getDeliveryLabel "+ ref)
+        try {
+            const response = await fetch("http://localhost:8080/s3/downloadFile/invoice/"+ref, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if(response.ok){
+                const data = await response.blob();
+                const url = URL.createObjectURL(data)
+
+                window.open(url)
+            }
+            console.log(`Get delivery label from order`);
+        } catch (error) {
+            console.error(`Error updating comment for order ${error}`);
+        }
+    }
+
+    async function colorForState(state) {
         if (color.hasOwnProperty(state)) {
             return Promise.resolve([color[state].code, color[state].label]);
-        }else {
+        } else {
             return Promise.resolve(null);
         }
     }
 
-    function initial(){
+    function initial() {
         let initial = "";
         tableBody.innerHTML = ''
-      
+
         if (titre.textContent == "Commandes - Site Prescription Nature") {
             return initial = "pn";
         } else if (titre.textContent == "Commandes - Site Body Full") {
@@ -369,44 +596,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderTableOrder() {
         fetch('http://localhost:8080/commandes/getByEtat/' + initial())
-        .then(async res => {
-          const data = await res.json();
-          for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            const conteneurStateOrder = document.createElement('div');
-            conteneurStateOrder.classList.add('conteneur-state-order');
-            if(item[2] == "litige_en_attente"){
-              conteneurStateOrder.style.color = "white";
-            }
-            let dataState = await colorForState(item[2]);
-            conteneurStateOrder.style.backgroundColor = dataState[0];
-            conteneurStateOrder.textContent = dataState[1];
-      
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${item[0]}</td>
-              <td>${item[1]}</td>
-              <td></td>
-              <td>${item[3]}</td>
-              <td>${item[4]}</td>
-              <td>${item[5]}</td>
-              <td>${item[6]}</td>
-              <td>${item[7]}</td>
-              <td>${item[8]}</td>
-              <td>${item[9]}</td>
-              <td>${item[10]}</td>
-              <td>${item[11]}</td>
-              <td>${item[12]}</td>
-            `;
-            row.querySelector('td:nth-child(3)').appendChild(conteneurStateOrder);
-      
-            tableBody.appendChild(row);
-          }
-        });
+            .then(async res => {
+                const data = await res.json();
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i];
+                    const conteneurStateOrder = document.createElement('div');
+                    conteneurStateOrder.classList.add('conteneur-state-order');
+                    if (item[2] == "litige_en_attente") {
+                        conteneurStateOrder.style.color = "white";
+                    }
+                    let dataState = await colorForState(item[2]);
+                    conteneurStateOrder.style.backgroundColor = dataState[0];
+                    conteneurStateOrder.textContent = dataState[1];
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                                <td>${item[0]}</td>
+                                <td>${item[1]}</td>
+                                <td></td>
+                                <td>${item[3]}</td>
+                                <td>${item[4]}</td>
+                                <td>${item[5]}</td>
+                                <td>${item[6]}</td>
+                                <td>${item[7]}</td>
+                                <td>${item[8]}</td>
+                                <td>${item[9]}</td>
+                                <td>${item[10]}</td>
+                                <td>${item[11]}</td>
+                                <td>${item[12]}</td>
+                                `;
+                    row.querySelector('td:nth-child(3)').appendChild(conteneurStateOrder);
+
+                    tableBody.appendChild(row);
+                }
+            });
     }
 
-    async function updateStateOrder(newState, ref){
-        switch (newState){
+    renderTableInvoice();
+
+    async function renderTableInvoice() {
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+            .then(async res => {
+                const data = await res.json();
+
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i];
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${new Date(item[10]).toISOString().substring(0, 10)}</td>
+                    <td class="showInvoiceInRenderTableInvoice" data-ref="${item[0]}">
+                    <img src="../../tools/svg/download.svg" class="icon-svg-xl" alt="Facture" /> FACTURE
+                    </td>
+                    <td class="showLabelInRenderTableInvoice" data-ref="${item[0]}">
+                    <img src="../../tools/svg/download.svg" class="icon-svg-xl" alt="Étiquette" /> ETIQUETTE
+                    </td>
+                    <td>${item[15]}</td>
+                    `;
+                    tableFacture.appendChild(row);
+                }
+                // Ajouter des écouteurs d'événements "click" aux éléments avec les classes "showInvoiceInRenderTableInvoice" et "showLabelInRenderTableInvoice"
+                const showInvoiceButtons = document.querySelectorAll('.showInvoiceInRenderTableInvoice');
+                showInvoiceButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        let ref = e.target.dataset.ref;
+                        console.log(ref);
+                        getInvoice('ref001')
+                        //getInvoice(ref);
+                        // TOCHANGE
+                    });
+                });
+                
+                const showLabelButtons = document.querySelectorAll('.showLabelInRenderTableInvoice');
+                showLabelButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        let ref = e.target.dataset.ref;
+                        console.log(ref);
+                        //getDeliveryLabel(ref);
+                        // TOCHANGE
+
+                    });
+                });
+            });
+    }
+
+
+    async function updateStateOrder(newState, ref) {
+        switch (newState) {
             case "dropzone1":
                 newState = "litige_en_attente"
                 break;
@@ -434,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case "dropzone9":
                 newState = "retour_annule"
                 break;
-            default :
+            default:
                 newState = "litige_en_cours"
         }
         const body = {
@@ -444,12 +720,12 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('http://localhost:8080/commandes/updateStateOrder', {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
-          })
-          .then(async res => {
+        })
+            .then(async res => {
                 const data = await res.json();
-          })
+            })
     }
 });
