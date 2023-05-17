@@ -1,2 +1,3 @@
 test_ec.pem
 .env
+node_modules/*
