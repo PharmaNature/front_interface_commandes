@@ -506,16 +506,26 @@ tbody tr:hover {
     
 }
 
-.telecharge-factures-commandepayees>img{
+
+.telecharge-factures-commandepayees>img, .telecharge-etiquettes-commandepayees>img{
     width:30px;
     height: 30px;
 }
-.telecharge-factures-commandepayees{
+.telecharge-factures-commandepayees, .telecharge-etiquettes-commandepayees{
     display: flex;
     align-items: center;
     margin-left: 5%;
 }
 
-.telecharge-factures-commandepayees>img:hover{
+.telecharge-factures-commandepayees:hover{
+    background-color: #08abdda6;
+}
+
+.telecharge-etiquettes-commandepayees:hover{
+    background-color: #49c108af;
+}
+
+
+.telecharge-factures-commandepayees>img:hover, .telecharge-etiquettes-commandepayees>img:hover{
     cursor: pointer;
 }

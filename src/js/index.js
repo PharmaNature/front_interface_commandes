@@ -530,13 +530,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
     
-    const downloadButton = document.querySelector('.telecharge-factures-commandepayees');
-    downloadButton.addEventListener('click', downloadAllInvoices);
+    // Télécharger toutes les factures des commandes payées
+    const downloadButtonInvoice = document.querySelector('.telecharge-factures-commandepayees');
+    downloadButtonInvoice.addEventListener('click', function(){
+        downloadAllPaidOrders("invoice")
+    });
+    
+    // Télécharger toutes les factures des commandes payées
+    const downloadButtonLabel = document.querySelector('.telecharge-etiquettes-commandepayees');
+    downloadButtonLabel.addEventListener('click', function(){
+        downloadAllPaidOrders("label")
+    });
 
 
-    async function downloadAllInvoices() {
+    async function downloadAllPaidOrders(type) {
         document.body.style.cursor = "wait";
-        const response = await fetch('http://localhost:8080/commandes/allInvoicesPaidOrders/pn',{
+        //console.log(type);
+        const response = await fetch('http://localhost:8080/commandes/allPaidOrders/pn/'+type,{
         method:"GET",
         headers: {
             "Content-Type": "application/json",
@@ -547,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileUrl = URL.createObjectURL(fileBlob);
             const downloadLink = document.createElement('a');
             downloadLink.href = fileUrl;
-            downloadLink.download = 'factures.pdf';
+            downloadLink.download = type+'s.pdf';
             downloadLink.click();
             document.body.style.cursor = "auto";
     }
