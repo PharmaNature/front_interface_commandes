@@ -1,4 +1,5 @@
-require('dotenv').config();
+//import dotenv from 'dotenv'
+//dotenv.config();
 
 const color = {
     "litige_en_attente": {
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderViewKanban()
     async function renderViewKanban() {
 
-        fetch('http://'+process.env.URL+':8080/commandes/getForViewKanban/' + initial())
+        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial())
             .then(async res => {
                 const data = await res.json();
                 // Récupération de la zone de drop
@@ -153,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     let key = "ref001";
 
-                    fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/' + key)
+                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key)
                         .then(async response => await response.blob())
                         .then(data => {
                             const pdfBlob = new Blob([data], { type: 'application/pdf' });
@@ -388,39 +389,95 @@ document.addEventListener('DOMContentLoaded', () => {
         div.appendChild(label);
         div.appendChild(input);
         popUp.appendChild(div);
+
+        return input
     }
 
     function displayPopup(popUp, ref) {
 
-        fetch('http://'+process.env.URL+':8080/commandes/getDetailForOneOrder/' + ref)
+        fetch('http://localhost:8080/commandes/getDetailForOneOrder/' + ref)
             .then(response => response.json())
             .then(data => {
                 // Faites quelque chose avec les données récupérées
                 console.log(data);
                 // création des éléments du pop up 
-                const elements = [
-                    ["Référence de commande", true, 0, false],
-                    ["Numéro de facture", true, 1, false],
-                    ["État de la commande", false, 2, false],
-                    ["Message du client", false, 3, false],
-                    ["Clé de facture", true, 4, false],
-                    ["Montant TTC", false, 5, false],
-                    ["Montant HT", false, 6, false],
-                    ["Prénom", false, 7, false],
-                    ["Nom", false, 8, false],
-                    ["Numéro de téléphone", false, 9, false],
-                    ["Date de création", true, 10, true],
-                    ["Date de dernière modification", true, 11, true],
-                    ["Mode de paiement", true, 12, false],
-                    ["Mode de livraison", false, 13, false],
-                    ["Identifiant utilisateur", true, 14, false],
-                    ["Site web", false, 15, false],
-                    ["Commentaire", false, 16, false]
-                ];
-                
-                for (let i = 0; i < elements.length; i++) {
-                    const element = elements[i];
-                    displayElementInPopup(popUp, data, element[0], element[1], element[2], element[3]);
+                const elements = {
+                    "Référence de commande": {
+                        values: [true, 0, false],
+                        elementWeb: null
+                    },
+                    "Numéro de facture": {
+                        values: [true, 1, false],
+                        elementWeb: null
+                    },
+                    "État de la commande": {
+                        values: [false, 2, false],
+                        elementWeb: null
+                    },
+                    "Message du client": {
+                        values: [false, 3, false],
+                        elementWeb: null
+                    },
+                    "Clé de facture": {
+                        values: [true, 4, false],
+                        elementWeb: null
+                    },
+                    "Montant TTC": {
+                        values: [false, 5, false],
+                        elementWeb: null
+                    },
+                    "Montant HT": {
+                        values: [false, 6, false],
+                        elementWeb: null
+                    },
+                    "Prénom": {
+                        values: [false, 7, false],
+                        elementWeb: null
+                    },
+                    "Nom": {
+                        values: [false, 8, false],
+                        elementWeb: null
+                    },
+                    "Numéro de téléphone": {
+                        values: [false, 9, false],
+                        elementWeb: null
+                    },
+                    "Date de création": {
+                        values: [true, 10, true],
+                        elementWeb: null
+                    },
+                    "Date de dernière modification": {
+                        values: [true, 11, true],
+                        elementWeb: null
+                    },
+                    "Mode de paiement": {
+                        values: [true, 12, false],
+                        elementWeb: null
+                    },
+                    "Mode de livraison": {
+                        values: [false, 13, false],
+                        elementWeb: null
+                    },
+                    "Identifiant utilisateur": {
+                        values: [true, 14, false],
+                        elementWeb: null
+                    },
+                    "Site web": {
+                        values: [false, 15, false],
+                        elementWeb: null
+                    },
+                    "Commentaire": {
+                        values: [false, 16, false],
+                        elementWeb: null
+                    }
+                };
+
+                for (const key in elements) {
+                    if (elements.hasOwnProperty(key)) {
+                        const element = elements[key];
+                        const elementWeb = displayElementInPopup(popUp, data, key, element.values[0], element.values[1], element.values[2]);
+                        element.elementWeb = elementWeb;
+                    }
                 }
 
                 // Etiquette de livraison (fichier pdf)
@@ -485,23 +542,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 popUp.appendChild(invoiceCommandeLabel);
 
+
                 // création du bouton Enregistrer
                 const enregistrerButton = document.createElement("button");
                 enregistrerButton.type = "submit"
                 enregistrerButton.textContent = "Enregistrer";
                 enregistrerButton.addEventListener("click", () => {
-                    
-                    data[0][2] = stateOrderInput.value
-                    data[0][3] = customerMessageInput.value
-                    data[0][5] = amountTTCInput.value
-                    data[0][6] = amountHTInput.value
-                    data[0][7] = firstNameInput.value
-                    data[0][8] = nomClientInput.value
-                    data[0][9] = phoneNumberInput.value
+                    console.log(elements["État de la commande"].elementWeb.value);
+                    data[0][2] = elements["État de la commande"].elementWeb.value
+                    data[0][3] = elements["Message du client"].elementWeb.value
+                    data[0][5] = elements["Montant TTC"].elementWeb.value
+                    data[0][6] = elements["Montant HT"].elementWeb.value
+                    data[0][7] = elements["Prénom"].elementWeb.value
+                    data[0][8] = elements["Nom"].elementWeb.value
+                    data[0][9] = elements["Numéro de téléphone"].elementWeb.value
                     data[0][11] = new Date().toUTCString()
-                    data[0][13] = deliveryLabelInput.value
-                    data[0][15] = webSiteInput.value
-                    data[0][16] = commentaireInput.value
+                    data[0][13] = elements["Mode de livraison"].elementWeb.value
+                    data[0][15] = elements["Site web"].elementWeb.value
+                    data[0][16] = elements["Commentaire"].elementWeb.value
 
                     console.log(data[0])
                     updateOrder(data[0]);
@@ -522,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15],data[16]]
         };
         try {
-            const response = await fetch('http://'+process.env.URL+':8080/commandes/updateOrder', {
+            const response = await fetch('http://localhost:8080/commandes/updateOrder', {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -539,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getDeliveryLabel(ref) {
         console.log("getDeliveryLabel "+ ref)
         try {
-            const response = await fetch('http://'+process.env.URL+':8080/s3/downloadFile/delivery_label/'+ref, {
+            const response = await fetch('http://localhost:8080/s3/downloadFile/delivery_label/'+ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -559,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getInvoice(ref) {
         console.log("getDeliveryLabel "+ ref)
         try {
-            const response = await fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/'+ref, {
+            const response = await fetch('http://localhost:8080/s3/downloadFile/invoice/'+ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -597,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function renderTableOrder() {
-        fetch('http://'+process.env.URL+':8080/commandes/getByEtat/' + initial())
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
             .then(async res => {
                 const data = await res.json();
                 for (let i = 0; i < data.length; i++) {
@@ -637,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTableInvoice();
 
     async function renderTableInvoice() {
-        fetch('http://'+process.env.URL+':8080/commandes/getByEtat/' + initial())
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
             .then(async res => {
                 const data = await res.json();
 
@@ -676,7 +734,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log(ref);
                         //getDeliveryLabel(ref);
                         // TOCHANGE
-
                     });
                 });
             });
@@ -719,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "ref": ref,
             "newState": newState
         }
-        fetch('http://'+process.env.URL+':8080/commandes/updateStateOrder', {
+        fetch('http://localhost:8080/commandes/updateStateOrder', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -731,3 +788,4 @@ document.addEventListener('DOMContentLoaded', () => {
             })
     }
 });
+
