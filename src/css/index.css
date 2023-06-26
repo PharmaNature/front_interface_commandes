@@ -130,7 +130,7 @@ body {
 .barre-outils {
     display: flex;
     border-bottom: 1px solid rgb(220, 219, 219);
-    height: 3vh;
+    height: 6vh;
 }
 
 .conteneur-global {
@@ -353,7 +353,7 @@ h3 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 0px 0;
 }
 
 th,
@@ -504,4 +504,28 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
     
+}
+
+
+.telecharge-factures-commandepayees>img, .telecharge-etiquettes-commandepayees>img{
+    width:30px;
+    height: 30px;
+}
+.telecharge-factures-commandepayees, .telecharge-etiquettes-commandepayees{
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+}
+
+.telecharge-factures-commandepayees:hover{
+    background-color: #08abdda6;
+}
+
+.telecharge-etiquettes-commandepayees:hover{
+    background-color: #49c108af;
+}
+
+
+.telecharge-factures-commandepayees>img:hover, .telecharge-etiquettes-commandepayees>img:hover{
+    cursor: pointer;
 }

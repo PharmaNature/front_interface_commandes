@@ -1,6 +1,5 @@
-//import dotenv from 'dotenv'
-//dotenv.config();
 
+//require('dotenv').config();
 const color = {
     "litige_en_attente": {
         "code": "#622ca0",
@@ -71,15 +70,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropzones = document.querySelectorAll('.dropzone');
     const contenueBoiteDraggable = document.querySelector('.contenue-boite-draggable')
 
+    let token = ""
     if(localStorage.getItem('objet')){
         titre.textContent = localStorage.getItem('objet');
+    }
+    if(localStorage.getItem('token')){
+        token = localStorage.getItem('token');
     }
 
     renderViewKanban()
     async function renderViewKanban() {
 
-        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial())
-            .then(async res => {
+        //fetch('http://'+process.env.URL+':8080/commandes/getForViewKanban/' + initial())
+        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial(),{
+        headers: {
+            "authorization": token
+        }})
+        .then(async res => {
                 const data = await res.json();
                 // Récupération de la zone de drop
                 const dropzone_litige = document.getElementById("dropzone1");
@@ -154,7 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     let key = "ref001";
 
-                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key)
+                    //fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/' + key)
+                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key,{
+                        headers: {
+                            "authorization": token
+                        }})
+
                         .then(async response => await response.blob())
                         .then(data => {
                             const pdfBlob = new Blob([data], { type: 'application/pdf' });
@@ -347,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleDoubleClick(e) {
-
+    
 
         const overlayDiv = document.createElement("div");
         overlayDiv.id = "overlay";
@@ -395,7 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayPopup(popUp, ref) {
 
-        fetch('http://localhost:8080/commandes/getDetailForOneOrder/' + ref)
+        fetch('http://localhost:8080/commandes/getDetailForOneOrder/' + ref,{
+            headers: {
+                "authorization": token
+            }})
             .then(response => response.json())
             .then(data => {
                 // Faites quelque chose avec les données récupérées
@@ -573,6 +588,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(error);
             });
     }
+    
+    // Télécharger toutes les factures des commandes payées
+    const downloadButtonInvoice = document.querySelector('.telecharge-factures-commandepayees');
+    downloadButtonInvoice.addEventListener('click', function(){
+        downloadAllPaidOrders("invoice")
+    });
+    
+    // Télécharger toutes les factures des commandes payées
+    const downloadButtonLabel = document.querySelector('.telecharge-etiquettes-commandepayees');
+    downloadButtonLabel.addEventListener('click', function(){
+        downloadAllPaidOrders("label")
+    });
+
+
+    async function downloadAllPaidOrders(type) {
+        document.body.style.cursor = "wait";
+        //console.log(type);
+        const response = await fetch('http://localhost:8080/commandes/allPaidOrders/pn/'+type,{
+        method:"GET",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+            });
+            const fileBlob = await response.blob();
+            const fileUrl = URL.createObjectURL(fileBlob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = fileUrl;
+            downloadLink.download = type+'s.pdf';
+            downloadLink.click();
+            document.body.style.cursor = "auto";
+    }
 
     async function updateOrder(data) {
         console.log(data);
@@ -584,6 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "authorization": token
                 },
                 body: JSON.stringify(updatedOrder),
             });
@@ -601,6 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "authorization": token
                 },
             });
             if(response.ok){
@@ -621,6 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "authorization": token
                 },
             });
             if(response.ok){
@@ -655,7 +705,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function renderTableOrder() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial(),{
+            headers: {
+                "authorization": token
+            }})
             .then(async res => {
                 const data = await res.json();
                 for (let i = 0; i < data.length; i++) {
@@ -695,7 +748,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTableInvoice();
 
     async function renderTableInvoice() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial())
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial(),{
+            headers: {
+                "authorization": token
+            }})
             .then(async res => {
                 const data = await res.json();
 
@@ -779,7 +835,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('http://localhost:8080/commandes/updateStateOrder', {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "authorization":token
             },
             body: JSON.stringify(body)
         })
