@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
 
-        const divOutils = document.querySelector('.barre-outils')
+        const divOutils = document.querySelector('.barre-outils-extra')
 
         divOutils.innerHTML +=
             `<div class="affiche-stats" >

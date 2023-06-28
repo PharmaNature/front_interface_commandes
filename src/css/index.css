@@ -127,11 +127,15 @@ body {
     color: rgb(80, 80, 80);
 }
 
-.barre-outils {
+.barre-outils,.barre-outils-base,.barre-outils-extra {
     display: flex;
     border-bottom: 1px solid rgb(220, 219, 219);
     height: 6vh;
 }
+.barre-outils{
+    justify-content: space-between;
+}
+
 
 .conteneur-global {
     display: flex;
@@ -512,10 +516,16 @@ tbody tr:hover {
     width:30px;
     height: 30px;
 }
-.telecharge-factures-commandepayees, .telecharge-etiquettes-commandepayees, .affiche-stats{
+.telecharge-factures-commandepayees, .telecharge-etiquettes-commandepayees{
     display: flex;
     align-items: center;
-    margin-left: 5%;
+    margin-left: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+.affiche-stats{
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
     transition: transform 0.3s ease-in-out;
 }
 
