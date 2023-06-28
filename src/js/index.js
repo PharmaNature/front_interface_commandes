@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const contenueBoiteDraggable = document.querySelector('.contenue-boite-draggable')
 
     let token = ""
-    if(localStorage.getItem('objet')){
+    if (localStorage.getItem('objet')) {
         titre.textContent = localStorage.getItem('objet');
     }
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
         token = localStorage.getItem('token');
     }
 
@@ -82,11 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderViewKanban() {
 
         //fetch('http://'+process.env.URL+':8080/commandes/getForViewKanban/' + initial())
-        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial(),{
-        headers: {
-            "authorization": token
-        }})
-        .then(async res => {
+        fetch('http://localhost:8080/commandes/getForViewKanban/' + initial(), {
+            headers: {
+                "authorization": token
+            }
+        })
+            .then(async res => {
                 const data = await res.json();
                 // Récupération de la zone de drop
                 const dropzone_litige = document.getElementById("dropzone1");
@@ -161,10 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     let key = "ref001";
                     //fetch('http://'+process.env.URL+':8080/s3/downloadFile/invoice/' + key)
-                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key,{
+                    fetch('http://localhost:8080/s3/downloadFile/invoice/' + key, {
                         headers: {
                             "authorization": token
-                        }})
+                        }
+                    })
                         .then(async response => await response.blob())
                         .then(data => {
                             const pdfBlob = new Blob([data], { type: 'application/pdf' });
@@ -357,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleDoubleClick(e) {
-    
+
 
         const overlayDiv = document.createElement("div");
         overlayDiv.id = "overlay";
@@ -381,19 +383,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    function displayElementInPopup(popUp,data,textLabel,isReadOnly,indexData,isADate){
+    function displayElementInPopup(popUp, data, textLabel, isReadOnly, indexData, isADate) {
 
         const label = document.createElement("label");
-        label.textContent = textLabel+": ";
+        label.textContent = textLabel + ": ";
         const input = document.createElement("input");
         input.type = "text";
         if (isReadOnly) {
             input.setAttribute("readonly", "");
         }
         if (isADate) {
-            input.value = new Date(data[0][indexData]).toLocaleString().substring(0,10);
-        }else{
-        input.value = data[0][indexData];
+            input.value = new Date(data[0][indexData]).toLocaleString().substring(0, 10);
+        } else {
+            input.value = data[0][indexData];
         }
         const div = document.createElement("div");
         div.appendChild(label);
@@ -403,10 +405,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayPopup(popUp, ref) {
 
-        fetch('http://localhost:8080/commandes/getDetailForOneOrder/' + ref,{
+        fetch('http://localhost:8080/commandes/getDetailForOneOrder/' + ref, {
             headers: {
                 "authorization": token
-            }})
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 // Faites quelque chose avec les données récupérées
@@ -431,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ["Site web", false, 15, false],
                     ["Commentaire", false, 16, false]
                 ];
-                
+
                 for (let i = 0; i < elements.length; i++) {
                     const element = elements[i];
                     displayElementInPopup(popUp, data, element[0], element[1], element[2], element[3]);
@@ -504,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 enregistrerButton.type = "submit"
                 enregistrerButton.textContent = "Enregistrer";
                 enregistrerButton.addEventListener("click", () => {
-                    
+
                     data[0][2] = stateOrderInput.value
                     data[0][3] = customerMessageInput.value
                     data[0][5] = amountTTCInput.value
@@ -529,16 +532,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(error);
             });
     }
-    
+
     // Télécharger toutes les factures des commandes payées
     const downloadButtonInvoice = document.querySelector('.telecharge-factures-commandepayees');
-    downloadButtonInvoice.addEventListener('click', function(){
+    downloadButtonInvoice.addEventListener('click', function () {
         downloadAllPaidOrders("invoice")
     });
-    
+
     // Télécharger toutes les factures des commandes payées
     const downloadButtonLabel = document.querySelector('.telecharge-etiquettes-commandepayees');
-    downloadButtonLabel.addEventListener('click', function(){
+    downloadButtonLabel.addEventListener('click', function () {
         downloadAllPaidOrders("label")
     });
 
@@ -546,26 +549,26 @@ document.addEventListener('DOMContentLoaded', () => {
     async function downloadAllPaidOrders(type) {
         document.body.style.cursor = "wait";
         //console.log(type);
-        const response = await fetch('http://localhost:8080/commandes/allPaidOrders/pn/'+type,{
-        method:"GET",
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": token
-        },
-            });
-            const fileBlob = await response.blob();
-            const fileUrl = URL.createObjectURL(fileBlob);
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileUrl;
-            downloadLink.download = type+'s.pdf';
-            downloadLink.click();
-            document.body.style.cursor = "auto";
+        const response = await fetch('http://localhost:8080/commandes/allPaidOrders/pn/' + type, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": token
+            },
+        });
+        const fileBlob = await response.blob();
+        const fileUrl = URL.createObjectURL(fileBlob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = type + 's.pdf';
+        downloadLink.click();
+        document.body.style.cursor = "auto";
     }
 
     async function updateOrder(data) {
         console.log(data);
         const updatedOrder = {
-            data : [data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15],data[16]]
+            data: [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16]]
         };
         try {
             const response = await fetch('http://localhost:8080/commandes/updateOrder', {
@@ -584,16 +587,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function getDeliveryLabel(ref) {
-        console.log("getDeliveryLabel "+ ref)
+        console.log("getDeliveryLabel " + ref)
         try {
-            const response = await fetch('http://localhost:8080/s3/downloadFile/delivery_label/'+ref, {
+            const response = await fetch('http://localhost:8080/s3/downloadFile/delivery_label/' + ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "authorization": token
                 },
             });
-            if(response.ok){
+            if (response.ok) {
                 const data = await response.blob();
                 const url = URL.createObjectURL(data)
 
@@ -605,16 +608,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     async function getInvoice(ref) {
-        console.log("getDeliveryLabel "+ ref)
+        console.log("getDeliveryLabel " + ref)
         try {
-            const response = await fetch('http://localhost:8080/s3/downloadFile/invoice/'+ref, {
+            const response = await fetch('http://localhost:8080/s3/downloadFile/invoice/' + ref, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "authorization": token
                 },
             });
-            if(response.ok){
+            if (response.ok) {
                 const data = await response.blob();
                 const url = URL.createObjectURL(data)
 
@@ -646,10 +649,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function renderTableOrder() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial(),{
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial(), {
             headers: {
                 "authorization": token
-            }})
+            }
+        })
             .then(async res => {
                 const data = await res.json();
                 for (let i = 0; i < data.length; i++) {
@@ -689,10 +693,11 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTableInvoice();
 
     async function renderTableInvoice() {
-        fetch('http://localhost:8080/commandes/getByEtat/' + initial(),{
+        fetch('http://localhost:8080/commandes/getByEtat/' + initial(), {
             headers: {
                 "authorization": token
-            }})
+            }
+        })
             .then(async res => {
                 const data = await res.json();
 
@@ -723,7 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // TOCHANGE
                     });
                 });
-                
+
                 const showLabelButtons = document.querySelectorAll('.showLabelInRenderTableInvoice');
                 showLabelButtons.forEach(button => {
                     button.addEventListener('click', (e) => {
@@ -778,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization":token
+                "authorization": token
             },
             body: JSON.stringify(body)
         })
@@ -786,4 +791,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
             })
     }
+
+
+    function renderAccessStatsButton() {
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const canSeeStats = payload.canSeeStats
+        if (canSeeStats === 0) {
+            return
+        }
+
+        const divOutils = document.querySelector('.barre-outils')
+
+        divOutils.innerHTML +=
+            `<div class="affiche-stats" >
+                    <img class="icon-svg" src="../../tools/svg/stats.svg" title="Affiche les statistiques de ventes"/>  
+                </div>`
+
+        const divStats = document.querySelector(".affiche-stats")
+        divStats.addEventListener('click', () => {
+            // Redirection vers la page des statistiques
+            window.location.href = './stats.html';
+        });
+        
+    }
+
+    renderAccessStatsButton();
 });
