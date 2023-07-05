@@ -27,7 +27,7 @@ const loginBtn = document.getElementById('login-btn');
                     // Stocker le token JWT dans le local storage
                     localStorage.setItem('token', data.token);
                     // Rediriger l'utilisateur vers une autre page
-                    window.location.href = '../html/index.html';
+                    window.location.href = '../html/home.html';
                 }
                 else {
                     throw new Error(data.message);
