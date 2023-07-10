@@ -1,0 +1,101 @@
+main, html, body{
+    margin: 0px;
+    padding: 0px;
+}
+
+.content-all-export{
+    padding-top: 2vh;
+    padding-right: 10vh;
+    padding-left: 10vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.content-one-export{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    width: calc(20% - 10px); /* Pour afficher trois div par ligne */
+    margin-bottom: 20px;
+    height: 400px;
+    width: 300px;
+}
+
+.title-export{
+    font-size: 18px;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    margin: 0;
+    text-align: center;
+    font-family: sans-serif;
+    border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.text-obj{
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1vh;
+}
+
+.orange{
+    color: #d68b5e;
+}
+
+.blue{
+    color: #7da8c0
+}
+
+.pink{
+    color: #cc6e8a
+}
+
+.white{
+    color: white
+}
+
+.green{
+    color: #77b792
+}
+
+.orange-back{
+    box-shadow: 0 2px 4px rgba(214, 139, 94, 1);
+}
+
+.blue-back {
+    box-shadow: 0 2px 4px rgba(125, 168, 192, 1);
+}
+
+.pink-back {
+    box-shadow: 0 2px 4px rgba(204, 110, 138, 1);
+}
+
+.green-back {
+    box-shadow: 0 2px 4px rgba(119, 183, 146, 1);
+}
+
+.explication{
+    font-size: 18px;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    margin: 0;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.icon-click{
+    height: 30px;
+    width: 30px;
+    padding: 2px;
+}
+
+.label-template{
+    font-size: 16px;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.content-consultation{
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    padding: 1vh;
+}

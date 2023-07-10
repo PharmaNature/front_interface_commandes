@@ -1,0 +1,31 @@
+main, html, body{
+    margin: 0;
+    padding: 0;
+}
+
+.content-header {
+    background-color: #875a7b;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.icon-header{
+    height: 24px;
+    width: 24px;
+    margin-left: 15px;
+    display: block;
+}
+
+.global-title{
+    flex-grow: 1;
+    text-align: center;
+    font-family: sans-serif;
+    margin: 0;
+    color: white;
+    font-size: 16px;
+    position: absolute; /* Ajout de la propriété position */
+    left: 50%; /* Ajout de la propriété left */
+    transform: translateX(-50%); /* Ajout de la propriété transform */
+}
